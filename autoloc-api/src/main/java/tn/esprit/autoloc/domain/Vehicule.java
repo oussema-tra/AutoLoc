@@ -1,31 +1,18 @@
 package tn.esprit.autoloc.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "vehicule")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor @Builder
 public class Vehicule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotBlank
-    private String immatriculation;
-
-    @NotBlank
-    private String marque;
-
-    @NotBlank
-    private String modele;
-
-    private int annee;
+    private Long idVehicule;
 
     @Enumerated(EnumType.STRING)
     private CategorieVehicule categorie;
@@ -33,7 +20,12 @@ public class Vehicule {
     @Enumerated(EnumType.STRING)
     private StatutVehicule statut;
 
-    private double kilometrage;
+    private String immatriculation;
+    private String marque;
+    private String modele;
+    private BigDecimal tarifJournalier;
 
-    private double prixLocationJournalier;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "agence_id")
+    private Agence agence;
 }
