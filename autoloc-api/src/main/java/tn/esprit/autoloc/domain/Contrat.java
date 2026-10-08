@@ -2,17 +2,30 @@ package tn.esprit.autoloc.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDate;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "contrat")
-@Data @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor @Builder
 public class Contrat {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idContrat;
 
     private LocalDate dateSignature;
     private BigDecimal montantTotal;
-    private boolean valide;
+    private Boolean valide;
+
+    @OneToMany(mappedBy = "contrat", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Builder.Default
+    private Set<Paiement> paiements = new HashSet<>();
+
+    // ⚠️ AJOUTER : relation OneToOne inverse (mappedBy)
+    @OneToOne(mappedBy = "contrat", fetch = FetchType.LAZY)
+    private Reservation reservation;
 }

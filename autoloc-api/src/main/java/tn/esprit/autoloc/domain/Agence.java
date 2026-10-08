@@ -10,7 +10,7 @@ import java.util.Set;
 @Table(name = "agence")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor @Builder
-@ToString(exclude = "vehicules")
+@ToString(exclude = {"vehicules", "employees"})
 public class Agence {
 
     @Id
@@ -29,4 +29,9 @@ public class Agence {
     @OneToMany(mappedBy = "agence", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @Builder.Default
     private Set<Vehicule> vehicules = new HashSet<>();
+
+    // ⚠️ AJOUTER : relation OneToMany vers Employee
+    @OneToMany(mappedBy = "agence", fetch = FetchType.LAZY)  // Pas de cascade
+    @Builder.Default
+    private Set<Employe> employees = new HashSet<>();
 }

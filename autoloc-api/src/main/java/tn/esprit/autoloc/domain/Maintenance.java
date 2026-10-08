@@ -6,12 +6,20 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "maintenance")
-@Data @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor @Builder
 public class Maintenance {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idMaintenance;
 
     private LocalDate dateDebut;
     private LocalDate dateFin;
     private String description;
+
+    // ⚠️ AJOUTER : relation ManyToOne vers Vehicule
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "vehicule_id")
+    private Vehicule vehicule;
 }

@@ -8,15 +8,19 @@ import lombok.*;
 @Table(name = "employe")
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class Employe {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idEmploye;
 
-    @NotBlank
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idEmployee;
+
     private String nom;
-
-    @NotBlank
     private String prenom;
 
     @Enumerated(EnumType.STRING)
     private RoleEmploye role;
+
+    // ⚠️ AJOUTER : relation ManyToOne vers Agence
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "agence_id")
+    private Agence agence;
 }
