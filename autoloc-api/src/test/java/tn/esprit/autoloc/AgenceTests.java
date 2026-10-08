@@ -127,23 +127,36 @@ public class AgenceTests {
     }
 
     @Test
+
     public void loadPagedAgences() {
         Sort sort = Sort.by("idAgence").descending();
-        Pageable pageable = PageRequest.of(0, 2, sort);
+        int pageSize = 2;
 
-        Page<Agence> page = fullAgenceRepository.findAll(pageable);
+        // Charger la première page pour connaître le nombre total de pages
+        Pageable firstPageable = PageRequest.of(0, pageSize, sort);
+        Page<Agence> firstPage = fullAgenceRepository.findAll(firstPageable);
+
+        int totalPages = firstPage.getTotalPages();
+        long totalElements = firstPage.getTotalElements();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("=== Agences paginées (taille=2) ===\n");
-        sb.append("Total pages : ").append(page.getTotalPages()).append("\n");
-        sb.append("Total éléments : ").append(page.getTotalElements()).append("\n");
-        sb.append("Page courante : ").append(page.getNumber()).append("\n");
-        sb.append("--- Agences de cette page ---\n");
+        sb.append("=== Agences paginées (taille=").append(pageSize).append(") ===\n");
+        sb.append("Total pages : ").append(totalPages).append("\n");
+        sb.append("Total éléments : ").append(totalElements).append("\n");
+        sb.append("\n");
 
-        for (Agence agence : page.getContent()) {
-            sb.append(agence.getIdAgence()).append(" | ")
-                    .append(agence.getNom()).append(" | ")
-                    .append(agence.getVille()).append("\n");
+        // Boucler sur toutes les pages
+        for (int i = 0; i < totalPages; i++) {
+            Pageable pageable = PageRequest.of(i, pageSize, sort);
+            Page<Agence> page = fullAgenceRepository.findAll(pageable);
+
+            sb.append("--- Page ").append(page.getNumber()).append(" ---\n");
+            for (Agence agence : page.getContent()) {
+                sb.append(agence.getIdAgence()).append(" | ")
+                        .append(agence.getNom()).append(" | ")
+                        .append(agence.getVille()).append("\n");
+            }
+            sb.append("\n");
         }
 
         fail(sb.toString());
