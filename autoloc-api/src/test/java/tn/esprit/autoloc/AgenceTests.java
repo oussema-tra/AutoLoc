@@ -10,6 +10,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 import tn.esprit.autoloc.domain.*;
 import tn.esprit.autoloc.repository.IAgenceRepository;
+import org.springframework.stereotype.Service;
+import tn.esprit.autoloc.service.IAgenceService;
+
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -25,6 +28,9 @@ public class AgenceTests {
 
     @Autowired
     private IAgenceRepository fullAgenceRepository;
+
+    @Autowired
+    private IAgenceService agenceService;
 
     // ==================== PARTIE I ====================
 
@@ -161,8 +167,22 @@ public class AgenceTests {
 
         fail(sb.toString());
     }
+
+    @Test
+    public void createAgence() {
+        Agence agence = new Agence();
+        agence.setNom("Agence Test");
+        agence.setVille("Tunis");
+        agence.setAdresse("1 Rue Test");
+        agence.setTelephone("71000000");
+
+        Agence saved = agenceService.create(agence);
+
+        System.out.println("Agence créée : " + saved.getIdAgence() + " | " + saved.getNom());
+    }
 }
 
 // Interface dans le même fichier
+@Service
 interface AgenceRepositoryMock extends CrudRepository<Agence, Long> {
 }
